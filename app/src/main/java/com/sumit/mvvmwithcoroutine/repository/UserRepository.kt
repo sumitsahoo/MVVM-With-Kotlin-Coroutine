@@ -46,27 +46,20 @@ object UserRepository {
                 job?.let { fetchUserJob ->
                     CoroutineScope(Dispatchers.IO + fetchUserJob).launch {
 
-                        withContext(Dispatchers.Main) {
-                            value = Resource.Loading(null)
-                        }
+                        postValue(Resource.Loading(null))
 
                         try {
 
                             val user = CustomRetrofitBuilder.userService.getUser(userId)
 
-                            withContext(Dispatchers.Main) {
-                                value = Resource.Success(user)
-                                fetchUserJob.complete()
-                            }
+                            postValue(Resource.Success(user))
+                            fetchUserJob.complete()
 
                         } catch (e: Exception) {
 
                             // Probably a network issue, handle gracefully :)
 
-                            withContext(Dispatchers.Main) {
-                                value = Resource.Error(e)
-                            }
-
+                            postValue(Resource.Error(e))
                             fetchUserJob.complete()
 
                         }
