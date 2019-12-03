@@ -5,7 +5,7 @@ data class User(
     val createdAt: String = "",
     val name: String = "",
     val avatar: String = ""
-){
+) {
     override fun toString(): String {
         return "ID: ${id}\nName: ${name}\nCreated At: ${createdAt}"
     }

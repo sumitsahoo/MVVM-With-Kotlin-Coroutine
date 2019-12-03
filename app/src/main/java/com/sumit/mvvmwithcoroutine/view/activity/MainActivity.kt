@@ -30,33 +30,34 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun initViewModel(){
+    fun initViewModel() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
-    fun setupEventListeners(){
+    fun setupEventListeners() {
         fab.setOnClickListener { view ->
             fetchUser((1..50).shuffled().first().toString())
         }
     }
 
-    fun observeUserDetails(){
+    fun observeUserDetails() {
+
         viewModel.user.observe(this, Observer {
 
             Glide
                 .with(context)
-                .load(it.avatar)
+                .load(it?.avatar)
                 .centerCrop()
                 .placeholder(R.drawable.ic_loading)
                 .apply(RequestOptions.circleCropTransform())
                 .into(iv_user_profile)
 
-            tv_user.text = it.toString()
+            tv_user.text = it?.toString()
 
         })
     }
 
-    fun fetchUser(userId: String){
+    fun fetchUser(userId: String) {
         viewModel.setUserId(userId)
     }
 

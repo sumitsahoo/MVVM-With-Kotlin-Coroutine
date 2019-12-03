@@ -9,13 +9,13 @@ import kotlinx.coroutines.*
 
 object UserRepository {
 
-    var job:CompletableJob? = null
+    var job: CompletableJob? = null
 
-    fun getUsers(): LiveData<List<User>>{
+    fun getUsers(): LiveData<List<User>> {
 
         job = Job()
 
-        return object: LiveData<List<User>>(){
+        return object : LiveData<List<User>>() {
             override fun onActive() {
                 super.onActive()
 
@@ -24,7 +24,7 @@ object UserRepository {
 
                         val users = CustomRetrofitBuilder.userService.getUsers()
 
-                        withContext(Dispatchers.Main){
+                        withContext(Dispatchers.Main) {
                             value = users
                             fetchUserJob.complete()
                         }
@@ -34,22 +34,30 @@ object UserRepository {
         }
     }
 
-    fun getUser(userId: String): LiveData<User>{
+    fun getUser(userId: String): LiveData<User> {
 
         job = Job()
 
-        return object: LiveData<User>(){
+        return object : LiveData<User>() {
             override fun onActive() {
                 super.onActive()
 
                 job?.let { fetchUserJob ->
                     CoroutineScope(Dispatchers.IO + fetchUserJob).launch {
 
-                        val user = CustomRetrofitBuilder.userService.getUser(userId)
+                        try {
+                            val user: User? = CustomRetrofitBuilder.userService.getUser(userId)
 
-                        withContext(Dispatchers.Main){
-                            value = user
-                            fetchUserJob.complete()
+                            if (user != null) {
+                                withContext(Dispatchers.Main) {
+                                    value = user
+                                    fetchUserJob.complete()
+                                }
+                            }
+                        } catch (e: Exception) {
+                            e.printStackTrace()
+
+                            // Probably a network issue, handle gracefully later :)
                         }
                     }
                 }
@@ -57,7 +65,7 @@ object UserRepository {
         }
     }
 
-    fun cancelJobs(){
+    fun cancelJobs() {
         job?.cancel()
     }
 

@@ -1,6 +1,5 @@
 package com.sumit.mvvmwithcoroutine.api
 
-import com.sumit.mvvmwithcoroutine.model.User
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 

@@ -12,5 +12,5 @@ interface UserService {
     @GET("/user/{userId}")
     suspend fun getUser(
         @Path("userId") userId: String
-    ): User
+    ): User?
 }
