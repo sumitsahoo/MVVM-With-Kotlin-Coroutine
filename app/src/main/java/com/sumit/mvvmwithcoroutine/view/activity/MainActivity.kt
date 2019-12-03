@@ -65,6 +65,15 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 is Resource.Error -> {
+
+                    Glide
+                        .with(context)
+                        .load(R.mipmap.ic_launcher)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_loading)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(iv_user_profile)
+
                     tv_user.text = getString(R.string.msg_network_error)
                 }
 
