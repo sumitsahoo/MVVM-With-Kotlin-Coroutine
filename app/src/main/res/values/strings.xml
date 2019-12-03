@@ -2,4 +2,6 @@
     <string name="app_name">MVVM With Coroutine</string>
     <string name="action_settings">Settings</string>
     <string name="hint_fab_action">Tap FAB to load user details</string>
+    <string name="msg_loading">Loading …</string>
+    <string name="msg_network_error">Unable to fetch data now. Please check your internet connection and try again later.</string>
 </resources>

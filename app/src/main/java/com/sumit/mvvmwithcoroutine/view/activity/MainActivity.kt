@@ -10,6 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sumit.mvvmwithcoroutine.R
+import com.sumit.mvvmwithcoroutine.model.Resource
+import com.sumit.mvvmwithcoroutine.model.User
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -44,15 +46,30 @@ class MainActivity : AppCompatActivity() {
 
         viewModel.user.observe(this, Observer {
 
-            Glide
-                .with(context)
-                .load(it?.avatar)
-                .centerCrop()
-                .placeholder(R.drawable.ic_loading)
-                .apply(RequestOptions.circleCropTransform())
-                .into(iv_user_profile)
+            when (it) {
 
-            tv_user.text = it?.toString()
+                is Resource.Loading<Any> -> {
+                    tv_user.text = getString(R.string.msg_loading)
+                }
+
+                is Resource.Success<User> -> {
+                    Glide
+                        .with(context)
+                        .load(it.data.avatar)
+                        .centerCrop()
+                        .placeholder(R.drawable.ic_loading)
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(iv_user_profile)
+
+                    tv_user.text = it.data.toString()
+                }
+
+                is Resource.Error -> {
+                    tv_user.text = getString(R.string.msg_network_error)
+                }
+
+            }
+
 
         })
     }

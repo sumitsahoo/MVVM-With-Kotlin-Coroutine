@@ -2,6 +2,7 @@ package com.sumit.mvvmwithcoroutine.repository
 
 import androidx.lifecycle.LiveData
 import com.sumit.mvvmwithcoroutine.api.CustomRetrofitBuilder
+import com.sumit.mvvmwithcoroutine.model.Resource
 import com.sumit.mvvmwithcoroutine.model.User
 import kotlinx.coroutines.*
 
@@ -11,7 +12,7 @@ object UserRepository {
 
     var job: CompletableJob? = null
 
-    fun getUsers(): LiveData<List<User>> {
+    /*fun getUsers(): LiveData<List<User>> {
 
         job = Job()
 
@@ -32,33 +33,42 @@ object UserRepository {
                 }
             }
         }
-    }
+    }*/
 
-    fun getUser(userId: String): LiveData<User> {
+    fun getUser(userId: String): LiveData<Resource<User>> {
 
         job = Job()
 
-        return object : LiveData<User>() {
+        return object : LiveData<Resource<User>>() {
             override fun onActive() {
                 super.onActive()
 
                 job?.let { fetchUserJob ->
                     CoroutineScope(Dispatchers.IO + fetchUserJob).launch {
 
-                        try {
-                            val user: User? = CustomRetrofitBuilder.userService.getUser(userId)
+                        withContext(Dispatchers.Main) {
+                            value = Resource.Loading(null)
+                        }
 
-                            if (user != null) {
-                                withContext(Dispatchers.Main) {
-                                    value = user
-                                    fetchUserJob.complete()
-                                }
+                        try {
+
+                            val user = CustomRetrofitBuilder.userService.getUser(userId)
+
+                            withContext(Dispatchers.Main) {
+                                value = Resource.Success(user)
+                                fetchUserJob.complete()
                             }
+
                         } catch (e: Exception) {
-                            e.printStackTrace()
+
+                            // Probably a network issue, handle gracefully :)
+
+                            withContext(Dispatchers.Main) {
+                                value = Resource.Error(e)
+                            }
+
                             fetchUserJob.complete()
 
-                            // Probably a network issue, handle gracefully later :)
                         }
                     }
                 }
