@@ -2,15 +2,14 @@ package com.sumit.mvvmwithcoroutine.view.activity
 
 import android.content.Context
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.sumit.mvvmwithcoroutine.R
-
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                 .with(context)
                 .load(it.avatar)
                 .centerCrop()
-                .placeholder(R.mipmap.ic_launcher)
+                .placeholder(R.drawable.ic_loading)
                 .apply(RequestOptions.circleCropTransform())
                 .into(iv_user_profile)
 
