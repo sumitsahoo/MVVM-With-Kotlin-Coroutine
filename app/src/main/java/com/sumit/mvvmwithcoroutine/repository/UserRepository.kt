@@ -56,6 +56,7 @@ object UserRepository {
                             }
                         } catch (e: Exception) {
                             e.printStackTrace()
+                            fetchUserJob.complete()
 
                             // Probably a network issue, handle gracefully later :)
                         }
