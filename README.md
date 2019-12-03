@@ -9,6 +9,7 @@ This is a simple example of Kotlin Coroutine implementation using MVVM architect
 4. Retrofit calls using `suspend`
 5. Uses of `switchMap`
 6. `Resource<T>` to handle `loading`, `success` and `error` cases
+7. Kotlin synthetic -> Say goodbye to `findViewById()` More details here : https://kotlinlang.org/docs/tutorials/android-plugin.html
 
 A big thanks to @mitchtabian, do watch his video : https://www.youtube.com/watch?v=PQvtdjhQEvw
 
