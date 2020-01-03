@@ -13,7 +13,7 @@ object CustomRetrofitBuilder {
 
         Retrofit.Builder()
             .baseUrl(BASE_URL)
-            .client(UnsafeOkHttpClient.getUnsafeOkHttpClient())
+            .client(UnsafeOkHttpClient.unsafeOkHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
     }
 
