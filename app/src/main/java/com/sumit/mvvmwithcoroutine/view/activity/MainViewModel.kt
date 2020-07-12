@@ -17,12 +17,10 @@ class MainViewModel : ViewModel() {
     }
 
     fun setUserId(userId: String) {
-        val userIdToFetch = userId
-
-        if (_userId.value == userIdToFetch)
+        if (_userId.value == userId)
             return
 
-        _userId.value = userIdToFetch
+        _userId.value = userId
     }
 
     fun cancelJobs() {

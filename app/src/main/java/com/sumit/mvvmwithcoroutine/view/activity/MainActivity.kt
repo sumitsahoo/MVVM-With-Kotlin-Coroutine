@@ -1,14 +1,21 @@
 package com.sumit.mvvmwithcoroutine.view.activity
 
 import android.content.Context
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.Target
 import com.sumit.mvvmwithcoroutine.R
 import com.sumit.mvvmwithcoroutine.model.Resource
 import com.sumit.mvvmwithcoroutine.model.User
@@ -29,20 +36,19 @@ class MainActivity : AppCompatActivity() {
         initViewModel()
         setupEventListeners()
         observeUserDetails()
-
     }
 
-    fun initViewModel() {
+    private fun initViewModel() {
         viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
     }
 
-    fun setupEventListeners() {
-        fab.setOnClickListener { view ->
+    private fun setupEventListeners() {
+        fab.setOnClickListener {
             fetchUser((1..50).shuffled().first().toString())
         }
     }
 
-    fun observeUserDetails() {
+    private fun observeUserDetails() {
 
         viewModel.user.observe(this, Observer {
 
@@ -59,13 +65,34 @@ class MainActivity : AppCompatActivity() {
                         .centerCrop()
                         .placeholder(R.drawable.ic_loading)
                         .apply(RequestOptions.circleCropTransform())
+                        .listener(object : RequestListener<Drawable> {
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                progress_bar.visibility = GONE
+                                return false
+                            }
+
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                progress_bar.visibility = GONE
+                                return false
+                            }
+                        })
                         .into(iv_user_profile)
 
                     tv_user.text = it.data.toString()
                 }
 
                 is Resource.Error -> {
-
                     Glide
                         .with(context)
                         .load(R.mipmap.ic_launcher)
@@ -78,12 +105,11 @@ class MainActivity : AppCompatActivity() {
                 }
 
             }
-
-
         })
     }
 
-    fun fetchUser(userId: String) {
+    private fun fetchUser(userId: String) {
+        progress_bar.visibility = VISIBLE
         viewModel.setUserId(userId)
     }
 
