@@ -49,19 +49,14 @@ object UserRepository {
                         postValue(Resource.Loading(null))
 
                         try {
-
                             val user = CustomRetrofitBuilder.userService.getUser(userId)
 
                             postValue(Resource.Success(user))
                             fetchUserJob.complete()
-
                         } catch (e: Exception) {
-
                             // Probably a network issue, handle gracefully :)
-
                             postValue(Resource.Error(e))
                             fetchUserJob.complete()
-
                         }
                     }
                 }
